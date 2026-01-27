@@ -1,4 +1,4 @@
-# Obsidian Sample Plugin
+# Digistotel (Digital Story Demiurge)
 
 This is a sample plugin for Obsidian (https://obsidian.md).
 
