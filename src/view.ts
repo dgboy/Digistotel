@@ -26,9 +26,11 @@ class TagView extends ItemView {
         container.empty();
         container.addClass("tag-view-container");
 
-        const refreshButton = container.createEl('button', { text: 'Обновить' });
-        const counterEl = container.createDiv({ cls: "tag-counter" });
-        const squaresContainer = container.createDiv({ cls: "tag-squares" });
+        const topbar = container.createDiv({ cls: "topbar" });
+        const counterLabel = topbar.createDiv({ cls: "tag-counter" });
+        const refreshButton = topbar.createEl('button', { text: 'Обновить' });
+
+        const viewport = container.createDiv({ cls: "tag-squares" });
 
         const updateContent = () => {
             const files = this.app.vault.getMarkdownFiles();
@@ -43,12 +45,36 @@ class TagView extends ItemView {
                 return file.path.startsWith(folderPath);
             });
 
-            counterEl.setText(`Найдено записей: ${search.length}`);
-            squaresContainer.empty();
+            counterLabel.setText(`Найдено записей: ${search.length}`);
+            viewport.empty();
 
             search.forEach(file => {
-                const block = squaresContainer.createDiv({ cls: "tag-square" });
+                const cache = this.app.metadataCache.getFileCache(file);
+                const frontmatter = cache?.frontmatter;
+
+                let participants: string[] = [];
+                if (frontmatter && frontmatter["Участники"]) {
+                    const raw = frontmatter["Участники"];
+                    if (Array.isArray(raw)) {
+                        participants = raw;
+                    } else if (typeof raw === "string") {
+                        // Если строка, разбиваем по запятой (можно настроить)
+                        participants = raw.split(',').map(s => s.trim()).filter(s => s);
+                    }
+                }
+
+                const block = viewport.createDiv({ cls: "tag-square" });
                 block.setText(file.basename);
+                // block.setText(file.basename + " (" + participants.length + ")");
+
+                if (participants.length > 0) {
+                    const chipsContainer = block.createDiv({ cls: "chips-container" });
+
+                    participants.forEach(p => {
+                        const chip = chipsContainer.createSpan({ cls: "chip" });
+                        chip.setText(this.extractAliasFromLink(p));
+                    });
+                }
                 block.addEventListener("click", () => {
                     this.app.workspace.openLinkText(file.path, "", false);
                 });
@@ -59,5 +85,11 @@ class TagView extends ItemView {
 
         updateContent();
         refreshButton.addEventListener('click', updateContent);
+    }
+
+    extractAliasFromLink(linkText: string): string {
+        // Формат: [[Заметка|Алиас]]
+        const match = linkText.match(/\[\[[^|\]]+\|([^\]]+)\]\]/);
+        return match ? match[1] || "" : linkText.replace(/\[\[|\]\]/g, '');
     }
 }
