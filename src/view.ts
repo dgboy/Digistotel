@@ -22,31 +22,39 @@ class TagView extends ItemView {
     }
 
     async render() {
-        // Очистим контейнер
         const container = this.containerEl.children[1] as HTMLElement;
         container.empty();
         container.addClass("tag-view-container");
 
-        // Здесь получим заметки по тегу
-        const files = this.app.vault.getMarkdownFiles();
-        const tag = "#дело/структура/сцена"; // можно взять из настроек плагина или фиксированный
-        const filtered = files.filter(file => {
-            const cache = this.app.metadataCache.getFileCache(file);
-            const tags = cache?.tags?.map(t => t.tag) || [];
-            return tags.includes(tag);
-        });
-        
+        const refreshButton = container.createEl('button', { text: 'Обновить' });
         const counterEl = container.createDiv({ cls: "tag-counter" });
-        counterEl.setText(`Найдено записей: ${filtered.length}`);
+        const squaresContainer = container.createDiv({ cls: "tag-squares" });
 
-        // Отображаем квадраты
-        filtered.forEach(file => {
-            const square = container.createDiv({ cls: "tag-square" });
-            square.setText(file.basename);
-            square.addEventListener("click", () => {
-                // Открыть заметку при клике
-                this.app.workspace.openLinkText(file.path, "", false);
+        const updateContent = () => {
+            const files = this.app.vault.getMarkdownFiles();
+            const tag = "#дело/структура/сцена";
+            
+            const search = files.filter(file => {
+                const cache = this.app.metadataCache.getFileCache(file);
+                const tags = cache?.tags?.map(t => t.tag) || [];
+                return tags.includes(tag);
             });
-        });
+
+            counterEl.setText(`Найдено записей: ${search.length}`);
+            squaresContainer.empty();
+
+            search.forEach(file => {
+                const square = squaresContainer.createDiv({ cls: "tag-square" });
+                square.setText(file.basename);
+                square.addEventListener("click", () => {
+                    this.app.workspace.openLinkText(file.path, "", false);
+                });
+            });
+            
+            console.log("Обновление контента");
+        };
+
+        updateContent();
+        refreshButton.addEventListener('click', updateContent);
     }
 }
