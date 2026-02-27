@@ -32,25 +32,28 @@ class TagView extends ItemView {
 
         const updateContent = () => {
             const files = this.app.vault.getMarkdownFiles();
-            const tag = "#дело/структура/сцена";
-            
+            // const tag = "#дело/структура/сцена";
+            const folder = "сцены";
+            let folderPath = folder && !folder.endsWith('/') ? folder + '/' : folder;
+
             const search = files.filter(file => {
-                const cache = this.app.metadataCache.getFileCache(file);
-                const tags = cache?.tags?.map(t => t.tag) || [];
-                return tags.includes(tag);
+                // const cache = this.app.metadataCache.getFileCache(file);
+                // const tags = cache?.tags?.map(t => t.tag) || [];
+                // return tags.includes(tag);
+                return file.path.startsWith(folderPath);
             });
 
             counterEl.setText(`Найдено записей: ${search.length}`);
             squaresContainer.empty();
 
             search.forEach(file => {
-                const square = squaresContainer.createDiv({ cls: "tag-square" });
-                square.setText(file.basename);
-                square.addEventListener("click", () => {
+                const block = squaresContainer.createDiv({ cls: "tag-square" });
+                block.setText(file.basename);
+                block.addEventListener("click", () => {
                     this.app.workspace.openLinkText(file.path, "", false);
                 });
             });
-            
+
             console.log("Обновление контента");
         };
 

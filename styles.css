@@ -6,9 +6,9 @@
 }
 
 .tag-square {
-    width: 100px;
+    width: 300px;
     height: 100px;
-    background-color: #f0f0f0;
+    background-color: #4d4d4d;
     border: 1px solid #ccc;
     border-radius: 4px;
     display: flex;
@@ -23,7 +23,7 @@
 }
 
 .tag-square:hover {
-    background-color: #e0e0e0;
+    background-color: #7f7f7f;
 }
 
 
