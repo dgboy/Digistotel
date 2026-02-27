@@ -1,8 +1,44 @@
-/*
+.tag-view-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    padding: 8px;
+}
 
-This CSS file will be included with your plugin, and
-available in the app when your plugin is enabled.
+.tag-square {
+    width: 100px;
+    height: 100px;
+    background-color: #f0f0f0;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    cursor: pointer;
+    overflow: hidden;
+    word-break: break-word;
+    padding: 4px;
+    transition: background-color 0.2s;
+}
 
-If your plugin does not need CSS, delete this file.
+.tag-square:hover {
+    background-color: #e0e0e0;
+}
 
-*/
+
+/* .tag-view-container {
+    display: flex;
+    flex-direction: column;
+    padding: 8px;
+} */
+.tag-counter {
+    margin-bottom: 8px;
+    font-weight: bold;
+    font-size: 1.1em;
+}
+.tag-squares {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
