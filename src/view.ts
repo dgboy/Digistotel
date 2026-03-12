@@ -53,8 +53,8 @@ class TagView extends ItemView {
                 const frontmatter = cache?.frontmatter;
 
                 let participants: string[] = [];
-                if (frontmatter && frontmatter["Участники"]) {
-                    const raw = frontmatter["Участники"];
+                if (frontmatter && frontmatter["Персонажи"]) {
+                    const raw = frontmatter["Персонажи"];
                     if (Array.isArray(raw)) {
                         participants = raw;
                     } else if (typeof raw === "string") {
