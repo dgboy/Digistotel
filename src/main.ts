@@ -18,7 +18,7 @@ export default class MyPlugin extends Plugin {
 		// This creates an icon in the left ribbon.
 		this.addRibbonIcon('dice', 'Sample', (evt: MouseEvent) => {
 			// Called when the user clicks the icon.
-			new Notice('This is a notice!');
+			// new Notice('This is a notice!');
 			this.activateView();
 		});
 
